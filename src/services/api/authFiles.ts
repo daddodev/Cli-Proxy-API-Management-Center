@@ -39,6 +39,7 @@ export type AuthFileFieldsPatch = {
   proxy_url?: string;
   headers?: Record<string, string>;
   priority?: number;
+  quota_limit_percent?: number | null;
   weight?: number | null;
   disable_cooling?: boolean;
   'disable-cooling'?: boolean;
@@ -304,6 +305,8 @@ const normalizeAuthFileEntry = (
     ...(statusMessage ? { statusMessage } : {}),
     ...(modified > 0 ? { modified } : {}),
     priority,
+    quotaLimitPercent:
+      typeof entry.quota_limit_percent === 'number' ? entry.quota_limit_percent : 0,
     weight,
     ...(note ? { note } : {}),
     ...(email ? { email } : {}),

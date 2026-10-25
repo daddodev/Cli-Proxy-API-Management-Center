@@ -23,6 +23,7 @@ import { ClaudeResetGrantDetails } from '../providers/claude/ClaudeResetGrantDet
 import { hasClaudeUsageData } from '../providers/claude/data';
 import bodyStyles from './QuotaBody.module.scss';
 import styles from './QuotaCard.module.scss';
+import { AccountRouting } from './AccountRouting';
 
 /** Bind the quota-page styles to the shared rendering contract. */
 const quotaClasses = bindQuotaClasses(bodyStyles, 'QuotaBody.module.scss');
@@ -35,6 +36,8 @@ export type QuotaCardProps = {
   resetting: boolean;
   /** Initial cascade delay; null disables entrance motion for later mounts. */
   entranceDelayMs?: number | null;
+  onSaved?: () => void;
+  canConfigure?: boolean;
   onRefresh: () => void;
   onReset: () => void;
 };
@@ -186,6 +189,9 @@ export function QuotaCard(props: QuotaCardProps) {
         )}
       </div>
 
+      {props.onSaved && entry.type !== 'plugin' && !file.runtimeOnly && (
+        <AccountRouting file={file} disabled={!props.canConfigure} onSaved={props.onSaved} />
+      )}
       {status !== 'idle' && (
         <footer className={styles.actionRow}>
           {entry.type === 'claude' && (

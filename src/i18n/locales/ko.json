@@ -2310,5 +2310,18 @@
     "error": "바인딩에 실패했습니다. 다시 시작하세요.",
     "unsupported": "이 서버는 SIWC 바인딩을 지원하지 않습니다.",
     "expired": "바인딩 세션이 만료되었습니다. 다시 시작하세요."
+  },
+  "account_routing": {
+    "strategy": "Account selection",
+    "round-robin": "Distributed (round-robin)",
+    "fill-first": "One account at a time (priority)",
+    "weighted-round-robin": "Weighted distribution",
+    "strategy_hint": "Higher priorities are tried first. Distributed modes share requests within the highest available priority. Existing sessions keep their account until it becomes unavailable.",
+    "priority": "Priority",
+    "limit": "Stop at usage (%)",
+    "enable": "Enable account",
+    "disable": "Disable account",
+    "save": "Save routing",
+    "limit_hint": "0 uses the upstream limit. Otherwise, skip this account when either known quota window reaches this percentage; resume after reset. Uses the latest reported quota, so in-flight requests can exceed the threshold."
   }
 }

@@ -1,6 +1,6 @@
 /**
- * 额度页纯逻辑：文件归类、tab 过滤、计数、分页。
- * React-free —— 由 tests/quotaPageLogic.test.ts 直接消费。
+ * Pure quota-page classification, filtering, counts, and pagination.
+ * React-free helpers consumed by quotaPageLogic tests.
  */
 
 import type { AuthFileItem } from '@/types';
@@ -50,15 +50,18 @@ export const resolveQuotaProviderType = (file: AuthFileItem): QuotaProviderType 
     : (QUOTA_TAB_ORDER.find((type) => QUOTA_FILTER_MAP[type](file)) ?? null);
 
 /**
- * 把文件列表归类为额度条目：不支持额度或已停用的文件被过滤，
- * 结果按 QUOTA_TAB_ORDER 分组排列（'全部' tab 的卡片顺序即由此决定）。
+ * Classify supported credentials; optionally retain disabled accounts for configuration.
+ * Results follow provider tab order.
  */
-export function classifyQuotaFiles(files: AuthFileItem[]): QuotaFileEntry[] {
+export function classifyQuotaFiles(
+  files: AuthFileItem[],
+  includeDisabled = false
+): QuotaFileEntry[] {
   const groups = new Map<QuotaProviderType, QuotaFileEntry[]>(
     QUOTA_TAB_ORDER.map((type) => [type, []])
   );
   for (const file of files) {
-    const type = resolveQuotaProviderType(file);
+    const type = resolveQuotaProviderType(includeDisabled ? { ...file, disabled: false } : file);
     if (!type) continue;
     groups.get(type)?.push({ file, type });
   }
@@ -139,7 +142,7 @@ export interface QuotaPagination<T> {
   totalPages: number;
 }
 
-/** 页码越界时收敛到有效区间（列表缩短后停留在最后一页而不是空页）。 */
+/** Clamp page numbers after the credential list shrinks. */
 export function paginate<T>(items: T[], page: number, pageSize: number): QuotaPagination<T> {
   const totalPages = Math.max(1, Math.ceil(items.length / pageSize));
   const currentPage = Math.min(Math.max(1, page), totalPages);

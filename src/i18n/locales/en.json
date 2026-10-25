@@ -2310,5 +2310,18 @@
     "error": "Binding failed. Please start over.",
     "unsupported": "This backend does not support SIWC binding.",
     "expired": "The binding session expired. Please start over."
+  },
+  "account_routing": {
+    "strategy": "Account selection",
+    "round-robin": "Distributed (round-robin)",
+    "fill-first": "One account at a time (priority)",
+    "weighted-round-robin": "Weighted distribution",
+    "strategy_hint": "Higher priorities are tried first. Distributed modes share requests within the highest available priority. Existing sessions keep their account until it becomes unavailable.",
+    "priority": "Priority",
+    "limit": "Stop at usage (%)",
+    "enable": "Enable account",
+    "disable": "Disable account",
+    "save": "Save routing",
+    "limit_hint": "0 uses the upstream limit. Otherwise, skip this account when either known quota window reaches this percentage; resume after reset. Uses the latest reported quota, so in-flight requests can exceed the threshold."
   }
 }

@@ -2316,5 +2316,18 @@
     "error": "Liên kết thất bại. Hãy bắt đầu lại.",
     "unsupported": "Máy chủ này không hỗ trợ liên kết SIWC.",
     "expired": "Phiên liên kết đã hết hạn. Hãy bắt đầu lại."
+  },
+  "account_routing": {
+    "strategy": "Account selection",
+    "round-robin": "Distributed (round-robin)",
+    "fill-first": "One account at a time (priority)",
+    "weighted-round-robin": "Weighted distribution",
+    "strategy_hint": "Higher priorities are tried first. Distributed modes share requests within the highest available priority. Existing sessions keep their account until it becomes unavailable.",
+    "priority": "Priority",
+    "limit": "Stop at usage (%)",
+    "enable": "Enable account",
+    "disable": "Disable account",
+    "save": "Save routing",
+    "limit_hint": "0 uses the upstream limit. Otherwise, skip this account when either known quota window reaches this percentage; resume after reset. Uses the latest reported quota, so in-flight requests can exceed the threshold."
   }
 }
