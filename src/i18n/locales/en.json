@@ -2318,10 +2318,11 @@
     "weighted-round-robin": "Weighted distribution",
     "strategy_hint": "Higher priorities are tried first. Distributed modes share requests within the highest available priority. Existing sessions keep their account until it becomes unavailable.",
     "priority": "Priority",
-    "limit": "Stop at usage (%)",
+    "five_hour_limit": "Stop with 5h quota left (%)",
+    "weekly_limit": "Stop with weekly quota left (%)",
     "enable": "Enable account",
     "disable": "Disable account",
     "save": "Save routing",
-    "limit_hint": "0 uses the upstream limit. Otherwise, skip this account when either known quota window reaches this percentage; resume after reset. Uses the latest reported quota, so in-flight requests can exceed the threshold."
+    "limit_hint": "Set the remaining quota to preserve for each window. 20 stops at 20% left (80% used). 0 uses the upstream limit for that window. Either limit pauses the account until usage drops or the window resets. Uses the latest reported quota; in-flight requests can exceed the threshold."
   }
 }

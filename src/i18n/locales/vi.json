@@ -2324,10 +2324,11 @@
     "weighted-round-robin": "Weighted distribution",
     "strategy_hint": "Higher priorities are tried first. Distributed modes share requests within the highest available priority. Existing sessions keep their account until it becomes unavailable.",
     "priority": "Priority",
-    "limit": "Stop at usage (%)",
+    "five_hour_limit": "Dừng khi hạn mức 5 giờ còn (%)",
+    "weekly_limit": "Dừng khi hạn mức tuần còn (%)",
     "enable": "Enable account",
     "disable": "Disable account",
     "save": "Save routing",
-    "limit_hint": "0 uses the upstream limit. Otherwise, skip this account when either known quota window reaches this percentage; resume after reset. Uses the latest reported quota, so in-flight requests can exceed the threshold."
+    "limit_hint": "Đặt phần hạn mức còn lại cần giữ cho từng chu kỳ. 20 nghĩa là dừng khi còn 20% (đã dùng 80%). 0 sử dụng giới hạn của nhà cung cấp cho chu kỳ đó. Chạm một trong hai ngưỡng sẽ tạm ngừng tài khoản đến khi mức sử dụng giảm hoặc chu kỳ đặt lại. Dựa trên hạn mức được báo cáo gần nhất; yêu cầu đang chạy có thể vượt ngưỡng."
   }
 }

@@ -70,7 +70,8 @@ export interface AuthFileItem {
   lastRefresh?: string | number;
   modified?: number;
   priority?: number;
-  quotaLimitPercent?: number;
+  quotaFiveHourRemainingPercent?: number;
+  quotaWeeklyRemainingPercent?: number;
   weight?: number;
   note?: string;
   success?: unknown;

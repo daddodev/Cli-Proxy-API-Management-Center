@@ -2344,10 +2344,11 @@
     "weighted-round-robin": "Weighted distribution",
     "strategy_hint": "Higher priorities are tried first. Distributed modes share requests within the highest available priority. Existing sessions keep their account until it becomes unavailable.",
     "priority": "Priority",
-    "limit": "Stop at usage (%)",
+    "five_hour_limit": "5 小時配額剩餘多少時停止（%）",
+    "weekly_limit": "每週配額剩餘多少時停止（%）",
     "enable": "Enable account",
     "disable": "Disable account",
     "save": "Save routing",
-    "limit_hint": "0 uses the upstream limit. Otherwise, skip this account when either known quota window reaches this percentage; resume after reset. Uses the latest reported quota, so in-flight requests can exceed the threshold."
+    "limit_hint": "分別設定每個週期要保留的剩餘配額。20 表示剩餘 20%（已用 80%）時停止。0 表示該週期使用上游限制。任一限制觸發後暫停使用此帳號，直到用量下降或週期重設。根據最新回報的配額判斷，進行中的請求可能超過門檻。"
   }
 }

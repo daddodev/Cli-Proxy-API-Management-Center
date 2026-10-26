@@ -92,7 +92,10 @@ export function AccountRouting({
 }) {
   const { t } = useTranslation();
   const [priority, setPriority] = useState(String(file.priority ?? 0));
-  const [limit, setLimit] = useState(String(file.quotaLimitPercent ?? 0));
+  const [fiveHourLimit, setFiveHourLimit] = useState(
+    String(file.quotaFiveHourRemainingPercent ?? 0)
+  );
+  const [weeklyLimit, setWeeklyLimit] = useState(String(file.quotaWeeklyRemainingPercent ?? 0));
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
   const mounted = useRef(true);
@@ -104,8 +107,9 @@ export function AccountRouting({
   }, []);
   useEffect(() => {
     setPriority(String(file.priority ?? 0));
-    setLimit(String(file.quotaLimitPercent ?? 0));
-  }, [file.priority, file.quotaLimitPercent]);
+    setFiveHourLimit(String(file.quotaFiveHourRemainingPercent ?? 0));
+    setWeeklyLimit(String(file.quotaWeeklyRemainingPercent ?? 0));
+  }, [file.priority, file.quotaFiveHourRemainingPercent, file.quotaWeeklyRemainingPercent]);
   const supportsLimit = ['claude', 'codex'].includes(String(file.provider ?? file.type));
   const save = async (toggle: boolean) => {
     const revision = apiClient.getConnectionRevision();
@@ -120,9 +124,16 @@ export function AccountRouting({
           String(file.authIndex ?? '') || undefined
         );
       else
-        await authFilesApi.patchFields(file.name, {
+        await authFilesApi.setRouting(file.name, {
           priority: Number(priority),
-          ...(supportsLimit ? { quota_limit_percent: Number(limit) } : {}),
+          ...(supportsLimit
+            ? {
+                limits: {
+                  fiveHourRemainingPercent: Number(fiveHourLimit),
+                  weeklyRemainingPercent: Number(weeklyLimit),
+                },
+              }
+            : {}),
         });
       if (current()) onSaved();
     } catch (err) {
@@ -134,10 +145,14 @@ export function AccountRouting({
   const valid =
     priority.trim() !== '' &&
     Number.isSafeInteger(Number(priority)) &&
-    limit.trim() !== '' &&
-    Number.isFinite(Number(limit)) &&
-    Number(limit) >= 0 &&
-    Number(limit) <= 100;
+    (!supportsLimit ||
+      [fiveHourLimit, weeklyLimit].every(
+        (value) =>
+          value.trim() !== '' &&
+          Number.isFinite(Number(value)) &&
+          Number(value) >= 0 &&
+          Number(value) <= 100
+      ));
   return (
     <div className={styles.settings}>
       <Button variant="secondary" disabled={disabled || busy} onClick={() => void save(true)}>
@@ -161,18 +176,32 @@ export function AccountRouting({
           />
         </label>
         {supportsLimit && (
-          <label>
-            {t('account_routing.limit')}
-            <input
-              type="number"
-              min="0"
-              max="100"
-              step="any"
-              value={limit}
-              disabled={disabled || busy}
-              onChange={(e) => setLimit(e.target.value)}
-            />
-          </label>
+          <>
+            <label>
+              {t('account_routing.five_hour_limit')}
+              <input
+                type="number"
+                min="0"
+                max="100"
+                step="any"
+                value={fiveHourLimit}
+                disabled={disabled || busy}
+                onChange={(e) => setFiveHourLimit(e.target.value)}
+              />
+            </label>
+            <label>
+              {t('account_routing.weekly_limit')}
+              <input
+                type="number"
+                min="0"
+                max="100"
+                step="any"
+                value={weeklyLimit}
+                disabled={disabled || busy}
+                onChange={(e) => setWeeklyLimit(e.target.value)}
+              />
+            </label>
+          </>
         )}
         <Button type="submit" variant="secondary" disabled={disabled || busy || !valid}>
           {t('account_routing.save')}

@@ -2318,10 +2318,11 @@
     "weighted-round-robin": "Weighted distribution",
     "strategy_hint": "Higher priorities are tried first. Distributed modes share requests within the highest available priority. Existing sessions keep their account until it becomes unavailable.",
     "priority": "Priority",
-    "limit": "Stop at usage (%)",
+    "five_hour_limit": "5시간 할당량 잔여 기준 (%)",
+    "weekly_limit": "주간 할당량 잔여 기준 (%)",
     "enable": "Enable account",
     "disable": "Disable account",
     "save": "Save routing",
-    "limit_hint": "0 uses the upstream limit. Otherwise, skip this account when either known quota window reaches this percentage; resume after reset. Uses the latest reported quota, so in-flight requests can exceed the threshold."
+    "limit_hint": "각 기간에 남겨 둘 할당량을 설정합니다. 20은 20% 남았을 때(80% 사용) 중지합니다. 0은 해당 기간의 공급자 제한을 사용합니다. 어느 한 제한에 도달하면 사용량이 줄거나 기간이 초기화될 때까지 계정을 일시 중지합니다. 최근 보고된 할당량을 사용하므로 진행 중인 요청은 기준을 초과할 수 있습니다."
   }
 }

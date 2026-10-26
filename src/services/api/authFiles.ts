@@ -40,6 +40,8 @@ export type AuthFileFieldsPatch = {
   headers?: Record<string, string>;
   priority?: number;
   quota_limit_percent?: number | null;
+  quota_5h_remaining_percent?: number | null;
+  quota_weekly_remaining_percent?: number | null;
   weight?: number | null;
   disable_cooling?: boolean;
   'disable-cooling'?: boolean;
@@ -261,6 +263,22 @@ const readBooleanField = (value: unknown): boolean | undefined => {
   return undefined;
 };
 
+const readQuotaRemainingPercent = (entry: AuthFileEntry, key: string): number => {
+  const remaining = entry[key];
+  if (
+    typeof remaining === 'number' &&
+    Number.isFinite(remaining) &&
+    remaining >= 0 &&
+    remaining <= 100
+  )
+    return remaining;
+  // Older v8 servers expose a single shared percentage-used ceiling.
+  const legacy = entry.quota_limit_percent;
+  return typeof legacy === 'number' && Number.isFinite(legacy) && legacy > 0 && legacy <= 100
+    ? 100 - legacy
+    : 0;
+};
+
 /**
  * Normalize backend kebab/snake_case fields into AuthFileItem camelCase fields.
  * Preserve raw fields for quota resolvers that read plan_type, id_token,
@@ -305,8 +323,8 @@ const normalizeAuthFileEntry = (
     ...(statusMessage ? { statusMessage } : {}),
     ...(modified > 0 ? { modified } : {}),
     priority,
-    quotaLimitPercent:
-      typeof entry.quota_limit_percent === 'number' ? entry.quota_limit_percent : 0,
+    quotaFiveHourRemainingPercent: readQuotaRemainingPercent(entry, 'quota_5h_remaining_percent'),
+    quotaWeeklyRemainingPercent: readQuotaRemainingPercent(entry, 'quota_weekly_remaining_percent'),
     weight,
     ...(note ? { note } : {}),
     ...(email ? { email } : {}),
@@ -563,6 +581,28 @@ export const authFilesApi = {
 
   patchFields: (name: string, fields: AuthFileFieldsPatch) =>
     apiClient.patch('/credentials/fields', { name, ...fields }),
+
+  setRouting: (
+    name: string,
+    settings: {
+      priority: number;
+      limits?: {
+        fiveHourRemainingPercent: number;
+        weeklyRemainingPercent: number;
+      };
+    }
+  ) =>
+    apiClient.patch('/credentials/fields', {
+      name,
+      priority: settings.priority,
+      ...(settings.limits
+        ? {
+            quota_limit_percent: null,
+            quota_5h_remaining_percent: settings.limits.fiveHourRemainingPercent,
+            quota_weekly_remaining_percent: settings.limits.weeklyRemainingPercent,
+          }
+        : {}),
+    }),
 
   requestManualRefresh: async (name: string, authIndex?: string): Promise<void> => {
     // The refresh response may include tokens. Never return it to callers.
